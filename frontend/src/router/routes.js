@@ -1,10 +1,9 @@
-
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import('components/home.vue'),
+    component: () => import('../components/home.vue'),
   },
-]
+];
 
-export default routes
+export default routes;
