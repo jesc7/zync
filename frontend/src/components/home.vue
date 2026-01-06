@@ -1,5 +1,5 @@
 <template>
-	<div>hi there!</div>
+	<div>hi there! lalala</div>
 </template>
 
 <script setup>
