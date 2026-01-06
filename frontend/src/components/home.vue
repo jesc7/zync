@@ -1,7 +1,7 @@
 <template>
-	<div class="flex flex-col items-center gap-6 p-7 rounded-2xl border-2">
-		<div>123</div>
-		<div>456</div>
+	<div class="h-screen flex items-center gap-3 p-7">
+		<div class="w-2xl h-full rounded-2xl border-2">123</div>
+		<div class="w-2xl h-full rounded-2xl border-2">456</div>
 	</div>
 </template>
 
