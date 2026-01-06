@@ -1,7 +1,7 @@
 <template>
-	<div class="h-screen flex items-center gap-3 p-7">
-		<div class="w-2xl h-full rounded-2xl border-2">123</div>
-		<div class="w-2xl h-full rounded-2xl border-2">456</div>
+	<div class="h-screen w-screen flex items-center gap-4 p-4">
+		<div class="h-full bg-blue-400 rounded-2xl border">123</div>
+		<div class="h-full bg-emerald-500 rounded-2xl border">456</div>
 	</div>
 </template>
 
