@@ -10,7 +10,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
 
-	"local/backend"
+	"github.com/jesc7/zync/backend"
 )
 
 //go:embed all:frontend/dist/spa
