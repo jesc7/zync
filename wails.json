@@ -5,7 +5,8 @@
   "frontend:install": "npm install",
   "frontend:build": "npm run build",
   "frontend:dev:watcher": "npm run dev",
-  "frontend:dev:serverUrl": "auto",
+  "frontend:dev:serverUrl_": "auto",
+  "frontend:dev:serverUrl": "localhost:9001",
   "author": {
     "name": "jesc7",
     "email": "jesc@mail.ru"
