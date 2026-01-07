@@ -2,7 +2,7 @@
 const routes = [
   {
     path: '/',
-    component: () => import('components/main.vue'),
+    component: () => import('components/zfixUI.vue'),
   },
 ]
 
