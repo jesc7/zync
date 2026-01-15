@@ -39,7 +39,7 @@ func main() {
 		OnStartup:     app.OnStartup,
 		OnBeforeClose: app.OnBeforeClose,
 		OnShutdown:    app.OnShutdown,
-		Bind: []interface{}{
+		Bind: []any{
 			app,
 		},
 		// Windows platform specific options
