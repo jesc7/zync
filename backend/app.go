@@ -4,6 +4,11 @@ import (
 	"context"
 )
 
+type Data struct {
+	Offer  string
+	Answer string
+}
+
 type App struct {
 	ctx context.Context
 }
