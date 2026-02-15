@@ -3,6 +3,8 @@ package backend
 import (
 	"context"
 	"time"
+
+	"github.com/wailsapp/wails/v2/runtime"
 )
 
 type Data struct {
@@ -17,10 +19,6 @@ type App struct {
 	data Data
 }
 
-func (a *App) SetTime(value time.Time) {
-	a.data.Time = value
-}
-
 func NewApp() *App {
 	return &App{}
 }
@@ -33,7 +31,8 @@ func (a *App) OnStartup(ctx context.Context) {
 		t := time.NewTicker(time.Second)
 		defer t.Stop()
 		for v := range t.C {
-			a.SetTime(v)
+			a.data.Time = v
+			runtime.E
 		}
 	}()
 }
