@@ -5,8 +5,9 @@ import (
 )
 
 type Data struct {
-	Offer  string
-	Answer string
+	Offer    string
+	Key      string
+	Password string
 }
 
 type App struct {
