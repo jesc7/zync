@@ -8,10 +8,10 @@ import (
 )
 
 type Data struct {
-	Offer    string
-	Key      string
-	Password string
-	Time     int64
+	Offer    string `json:"offer"`
+	Key      string `json:"key"`
+	Password string `json:"password"`
+	Time     int64  `json:"time"`
 }
 
 type App struct {

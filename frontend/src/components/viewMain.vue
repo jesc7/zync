@@ -12,8 +12,8 @@ const time = ref()
 
 onMounted(() => {
   // Подписываемся на событие "changeTime"
-  EventsOn('changeTime', (data) => {
-    time.value = data
+  EventsOn('changeTime', () => {
+    time.value = runtime
     
     // Показываем уведомление Quasar при каждом событии
     $q.notify({
