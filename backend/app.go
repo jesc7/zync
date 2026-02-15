@@ -11,7 +11,8 @@ type Data struct {
 }
 
 type App struct {
-	ctx context.Context
+	ctx  context.Context
+	data Data
 }
 
 func NewApp() *App {
