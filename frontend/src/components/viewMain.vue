@@ -3,8 +3,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { colors } from 'quasar'
+import { onMounted, onUnmounted, ref } from 'vue'
+import { EventsOn, EventsOff } from '@wailsjs/runtime/runtime'
+import { useQuasar } from 'quasar'
 
-const app = window.go.backend.App
+const $q = useQuasar()
+const time = ref()
+
+onMounted(() => {
+  // Подписываемся на событие "changeTime"
+  EventsOn('changeTime', (data) => {
+    time.value = data
+    
+    // Показываем уведомление Quasar при каждом событии
+    $q.notify({
+      message: `Получены данные из Go: ${data}`,
+      color: 'positive',
+      timeout: 500
+    })
+  })
+})
+
 </script>

@@ -4,14 +4,14 @@ import (
 	"context"
 	"time"
 
-	"github.com/wailsapp/wails/v2/runtime"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type Data struct {
 	Offer    string
 	Key      string
 	Password string
-	Time     time.Time
+	Time     int64
 }
 
 type App struct {
@@ -31,8 +31,8 @@ func (a *App) OnStartup(ctx context.Context) {
 		t := time.NewTicker(time.Second)
 		defer t.Stop()
 		for v := range t.C {
-			a.data.Time = v
-			runtime.E
+			a.data.Time = v.Unix()
+			runtime.EventsEmit(a.ctx, "changeTime")
 		}
 	}()
 }
