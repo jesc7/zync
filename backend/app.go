@@ -7,21 +7,27 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-type OfferData struct {
+type DataPart struct {
 	Value    string `json:"value"`
 	Key      string `json:"key"`
 	Password string `json:"password"`
 }
 
-func (o *OfferData) Get() OfferData {
-	return *o
+type Data struct {
+	Offer  DataPart `json:"offer"`
+	Answer DataPart `json:"answer"`
 }
 
-func (o *OfferData) Set(val OfferData) {
-	*o = val
+func (o *Data) Get() DataPart {
+	return o.Offer
 }
 
-var Offer OfferData
+func (o *Data) Set(val DataPart) {
+	o.Answer.Key = val.Key
+	o.Answer.Password = val.Password
+}
+
+var MyData Data
 
 type App struct {
 	ctx context.Context
