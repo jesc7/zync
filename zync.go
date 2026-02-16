@@ -47,8 +47,7 @@ func createOffer() (pc *webrtc.PeerConnection, offer webrtc.SessionDescription, 
 		},
 	}
 
-	// Create a new RTCPeerConnection
-	xParams, _ := openh264.NewParams()
+	xParams, _ := openh264.NewParams() //Create a new RTCPeerConnection
 	xParams.UsageType = openh264.ScreenContentRealTime
 	xParams.BitRate = 1_000_000 // 500kbps
 

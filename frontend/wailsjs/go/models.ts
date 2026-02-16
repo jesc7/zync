@@ -1,12 +1,12 @@
 export namespace backend {
 	
-	export class OfferData {
+	export class DataPart {
 	    value: string;
 	    key: string;
 	    password: string;
 	
 	    static createFrom(source: any = {}) {
-	        return new OfferData(source);
+	        return new DataPart(source);
 	    }
 	
 	    constructor(source: any = {}) {

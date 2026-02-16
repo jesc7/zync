@@ -18,6 +18,10 @@ type Data struct {
 	Answer DataPart `json:"answer"`
 }
 
+func (o *Data) IsAnswerer() bool {
+	return len(o.Answer.Key) != 0 && len(o.Answer.Password) == 0
+}
+
 func (o *Data) Get() DataPart {
 	return o.Offer
 }
