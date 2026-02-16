@@ -2,16 +2,14 @@ package backend
 
 import (
 	"context"
-	"time"
 
 	"github.com/pion/webrtc/v4"
-	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type DataPart struct {
-	Value    webrtc.SessionDescription `json:"value"`
-	Key      string                    `json:"key"`
-	Password string                    `json:"password"`
+	val      webrtc.SessionDescription
+	Key      string `json:"key"`
+	Password string `json:"password"`
 	e        error
 }
 
@@ -21,23 +19,20 @@ type Data struct {
 }
 
 func (o *Data) IsOffererReady() bool {
-	return len(o.Offer.Value.SDP) != 0
+	return len(o.Offer.val.SDP) != 0
 }
 
 func (o *Data) IsAnswererReady() bool {
-	return len(o.Answer.Value.SDP) != 0
+	return len(o.Answer.val.SDP) != 0
 }
 
 func (o *Data) Get() DataPart {
-	return DataPart{
-		Key:      o.Offer.Key,
-		Password: o.Offer.Password,
-	}
+	return o.Offer
 }
 
-func (o *Data) Set(val DataPart) {
-	o.Answer.Key = val.Key
-	o.Answer.Password = val.Password
+func (o *Data) Set(part DataPart) {
+	o.Answer.Key = part.Key
+	o.Answer.Password = part.Password
 }
 
 var MyData Data
@@ -56,17 +51,7 @@ func (a *App) OnStartup(ctx context.Context) {
 	a.ctx = ctx
 
 	go func() {
-		pc, MyData.Offer.Value, MyData.Offer.e = createOffer()
-	}()
-
-	go func() {
-		t := time.NewTicker(time.Second)
-		defer t.Stop()
-		for v := range t.C {
-			//a.data.Time = v.Unix()
-			_ = v
-			runtime.EventsEmit(a.ctx, "changeTime")
-		}
+		pc, MyData.Offer.val, MyData.Offer.e = createOffer()
 	}()
 }
 
