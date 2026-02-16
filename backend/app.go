@@ -20,16 +20,19 @@ type Data struct {
 	Answer DataPart `json:"answer"`
 }
 
-func (o *Data) IsReady() bool {
+func (o *Data) IsOffererReady() bool {
+	return len(o.Offer.Value.SDP) != 0
+}
+
+func (o *Data) IsAnswererReady() bool {
 	return len(o.Answer.Value.SDP) != 0
 }
 
-func (o *Data) IsAnswerer() bool {
-	return len(o.Answer.Key) != 0 && len(o.Answer.Password) == 0
-}
-
 func (o *Data) Get() DataPart {
-	return o.Offer
+	return DataPart{
+		Key:      o.Offer.Key,
+		Password: o.Offer.Password,
+	}
 }
 
 func (o *Data) Set(val DataPart) {
