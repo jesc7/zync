@@ -24,15 +24,23 @@ func (o *Data) IsOfferReady() bool {
 		len(o.Offer.Password) != 0
 }
 
-func (o *Data) IsOfferError() (bool, string) {
-	if o.Offer.e != nil {
-		return true, o.Offer.e.Error()
+func (o *Data) IsAnswerReady() bool {
+	return len(o.Answer.val.SDP) != 0
+}
+
+func (p *DataPart) IsError() (bool, string) {
+	if p.e != nil {
+		return true, p.e.Error()
 	}
 	return false, ""
 }
 
-func (o *Data) IsAnswerReady() bool {
-	return len(o.Answer.val.SDP) != 0
+func (o *Data) IsOfferError() (bool, string) {
+	return o.Offer.IsError()
+}
+
+func (o *Data) IsAnswerError() (bool, string) {
+	return o.Answer.IsError()
 }
 
 func (o *Data) Get() DataPart {
