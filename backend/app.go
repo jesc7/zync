@@ -4,18 +4,24 @@ import (
 	"context"
 	"time"
 
+	"github.com/pion/webrtc/v4"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type DataPart struct {
-	Value    string `json:"value"`
-	Key      string `json:"key"`
-	Password string `json:"password"`
+	Value    webrtc.SessionDescription `json:"value"`
+	Key      string                    `json:"key"`
+	Password string                    `json:"password"`
+	e        error
 }
 
 type Data struct {
 	Offer  DataPart `json:"offer"`
 	Answer DataPart `json:"answer"`
+}
+
+func (o *Data) IsReady() bool {
+	return len(o.Answer.Value.SDP) != 0
 }
 
 func (o *Data) IsAnswerer() bool {
@@ -45,6 +51,11 @@ func NewApp() *App {
 
 func (a *App) OnStartup(ctx context.Context) {
 	a.ctx = ctx
+
+	go func() {
+		pc, MyData.Offer.Value, MyData.Offer.e = createOffer()
+	}()
+
 	go func() {
 		t := time.NewTicker(time.Second)
 		defer t.Stop()
