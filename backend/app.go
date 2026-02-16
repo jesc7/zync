@@ -18,11 +18,20 @@ type Data struct {
 	Answer DataPart `json:"answer"`
 }
 
-func (o *Data) IsOffererReady() bool {
-	return len(o.Offer.val.SDP) != 0
+func (o *Data) IsOfferReady() bool {
+	return len(o.Offer.val.SDP) != 0 &&
+		len(o.Offer.Key) != 0 &&
+		len(o.Offer.Password) != 0
 }
 
-func (o *Data) IsAnswererReady() bool {
+func (o *Data) IsOfferError() (bool, string) {
+	if o.Offer.e != nil {
+		return true, o.Offer.e.Error()
+	}
+	return false, ""
+}
+
+func (o *Data) IsAnswerReady() bool {
 	return len(o.Answer.val.SDP) != 0
 }
 
