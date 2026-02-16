@@ -13,9 +13,15 @@ type OfferData struct {
 	Password string `json:"password"`
 }
 
-var Offer OfferData
+func (o *OfferData) Get() OfferData {
+	return *o
+}
 
-//func
+func (o *OfferData) Set(val OfferData) {
+	*o = val
+}
+
+var Offer OfferData
 
 type App struct {
 	ctx context.Context
