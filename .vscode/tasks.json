@@ -4,8 +4,28 @@
         {
             "label": "wails-build-debug",
             "type": "shell",
-            "command": "wails build -debug -o ${workspaceFolder}/build/bin/zync.exe",
-            "group": "build"
+            // Используем go build напрямую для корректной работы отладчика dlv
+            "command": "go build -gcflags \"all=-N -l\" -tags dev -o ${workspaceFolder}/build/bin/zync.exe",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "dependsOn": [
+                "build-frontend"
+            ],
+            "problemMatcher": [
+                "$go"
+            ]
+        },
+        {
+            "label": "build-frontend",
+            "type": "shell",
+            // Собираем фронтенд, чтобы ассеты были актуальны
+            "command": "npm run build",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "problemMatcher": []
         }
     ]
 }
