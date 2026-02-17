@@ -64,13 +64,21 @@ func (c *Client) SendOffer(offer string) (key, password string, e error) {
 	}
 
 	var answer Msg
-	if e=c.conn.ReadJSON(&answer);e!=nil{
+	if e = c.conn.ReadJSON(&answer); e != nil {
 		return
 	}
-	if answer.Code==-1 {
-		e= errors.New(answer.Value)
+	if answer.Type != MT_SENDOFFER {
+		return "", "", errors.New("Wrong answer type")
 	}
-	return strings.Split() answer.Key, an
+	if answer.Code == -1 {
+		return "", "", errors.New(answer.Value)
+	}
+
+	sl := strings.Split(answer.Key, "@")
+	if len(sl) < 2 {
+		return "", "", errors.New("Wrong key value")
+	}
+	return sl[0], sl[1], nil
 }
 
 /*
