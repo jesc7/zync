@@ -61,7 +61,7 @@ func CreateOffer() (pc *webrtc.PeerConnection, offer webrtc.SessionDescription, 
 		return
 	}
 
-	s, e := mediadevices.GetDisplayMedia(mediadevices.MediaStreamConstraints{
+	stream, e := mediadevices.GetDisplayMedia(mediadevices.MediaStreamConstraints{
 		Video: func(c *mediadevices.MediaTrackConstraints) {
 		},
 		Codec: codecSelector,
@@ -70,7 +70,7 @@ func CreateOffer() (pc *webrtc.PeerConnection, offer webrtc.SessionDescription, 
 		return
 	}
 
-	for _, track := range s.GetTracks() {
+	for _, track := range stream.GetTracks() {
 		if _, e = pc.AddTransceiverFromTrack(track,
 			webrtc.RTPTransceiverInit{
 				Direction: webrtc.RTPTransceiverDirectionSendonly,
