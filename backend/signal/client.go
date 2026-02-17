@@ -1,10 +1,8 @@
 package signal
 
 import (
-	"errors"
 	"net/url"
 	"sync"
-	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -65,11 +63,6 @@ func (c *Client) SendOffer(offer string) (key, password string, e error) {
 	}
 
 	var answer Msg
-	select {
-	case <-time.After(10 * time.Second):
-		e = errors.New("Timeout has expired")
-		return
-	}
 	c.conn.ReadJSON(&answer)
 }
 
