@@ -15,15 +15,6 @@ type Msg struct {
 	Value string `json:"val,omitzero"`
 }
 
-func start(addr string, in <-chan Msg) chan<- Msg {
-	out := make(chan Msg)
-	go func() {
-		//
-	}()
-
-	return out
-}
-
 type Client struct {
 	conn    *websocket.Conn
 	in, out chan Msg
@@ -55,3 +46,14 @@ func (c *Client) Close() {
 func SendOffer() {
 
 }
+
+/*
+func start(addr string, in <-chan Msg) chan<- Msg {
+	out := make(chan Msg)
+	go func() {
+		//
+	}()
+
+	return out
+}
+*/
