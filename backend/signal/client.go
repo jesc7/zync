@@ -9,6 +9,8 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+type MessageType int
+
 const (
 	MT_NOANSWER      MessageType = iota - 1 //не отправлять ответ
 	MT_SENDOFFER                            //клиент1 отправил offer
@@ -21,10 +23,10 @@ const (
 )
 
 type Msg struct {
-	Type  int    `json:"type"`
-	Code  int    `json:"code"`
-	Key   string `json:"key,omitzero"`
-	Value string `json:"val,omitzero"`
+	Type  MessageType `json:"type"`
+	Code  int         `json:"code"`
+	Key   string      `json:"key,omitzero"`
+	Value string      `json:"val,omitzero"`
 }
 
 type Client struct {
@@ -80,14 +82,3 @@ func (c *Client) SendOffer(offer string) (key, password string, e error) {
 	}
 	return sl[0], sl[1], nil
 }
-
-/*
-func start(addr string, in <-chan Msg) chan<- Msg {
-	out := make(chan Msg)
-	go func() {
-		//
-	}()
-
-	return out
-}
-*/

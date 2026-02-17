@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	rtc "github.com/jesc7/zync/backend/rtc"
+	signal "github.com/jesc7/zync/backend/signal"
 	"github.com/jesc7/zync/backend/util"
 	"github.com/pion/webrtc/v4"
 )
@@ -60,6 +61,7 @@ func (o *Data) Set(part DataPart) {
 var (
 	MyData Data
 	Conn   *webrtc.PeerConnection
+	Signal *signal.Client
 )
 
 type Config struct {
