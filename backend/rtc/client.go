@@ -1,4 +1,4 @@
-package backend
+package rtc
 
 import (
 	"encoding/base64"
@@ -15,9 +15,7 @@ import (
 	"github.com/pion/webrtc/v4"
 )
 
-var pc *webrtc.PeerConnection
-
-func Encode(v any) (string, error) {
+func encode(v any) (string, error) {
 	b, e := json.Marshal(v)
 	if e != nil {
 		return "", e
@@ -25,7 +23,7 @@ func Encode(v any) (string, error) {
 	return base64.StdEncoding.EncodeToString(b), nil
 }
 
-func Decode(in string, v any) error {
+func decode(in string, v any) error {
 	b, e := base64.StdEncoding.DecodeString(in)
 	if e != nil {
 		return e
@@ -41,7 +39,7 @@ type Msg struct {
 	Value string `json:"val,omitzero"`
 }
 
-func createOffer() (pc *webrtc.PeerConnection, offer webrtc.SessionDescription, e error) {
+func CreateOffer() (pc *webrtc.PeerConnection, offer webrtc.SessionDescription, e error) {
 	config := webrtc.Configuration{
 		ICEServers: []webrtc.ICEServer{
 			{URLs: []string{"stun:stun.l.google.com:19302"}},
@@ -103,11 +101,11 @@ func abc() {
 	}
 	defer conn.Close()
 
-	pc, offer, e := createOffer()
+	pc, offer, e := CreateOffer()
 	if e != nil {
 		panic(e)
 	}
-	payload, e := Encode(offer)
+	payload, e := encode(offer)
 	if e != nil {
 		panic(e)
 	}
@@ -139,7 +137,7 @@ func abc() {
 
 		case 3:
 			var answer webrtc.SessionDescription
-			if e = Decode(msg.Value, answer); e != nil {
+			if e = decode(msg.Value, answer); e != nil {
 				panic(e)
 			}
 			if e = pc.SetRemoteDescription(answer); e != nil {

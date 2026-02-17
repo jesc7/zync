@@ -3,6 +3,7 @@ package backend
 import (
 	"context"
 
+	rtc "github.com/jesc7/zync/backend/rtc"
 	"github.com/pion/webrtc/v4"
 )
 
@@ -52,7 +53,10 @@ func (o *Data) Set(part DataPart) {
 	o.Answer.Password = part.Password
 }
 
-var MyData Data
+var (
+	MyData Data
+	Conn   *webrtc.PeerConnection
+)
 
 type App struct {
 	ctx context.Context
@@ -68,7 +72,7 @@ func (a *App) OnStartup(ctx context.Context) {
 	a.ctx = ctx
 
 	go func() {
-		pc, MyData.Offer.val, MyData.Offer.e = createOffer()
+		Conn, MyData.Offer.val, MyData.Offer.e = rtc.CreateOffer()
 	}()
 }
 
