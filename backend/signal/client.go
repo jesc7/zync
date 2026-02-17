@@ -1,7 +1,9 @@
 package signal
 
 import (
+	"errors"
 	"net/url"
+	"strings"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -21,7 +23,6 @@ const (
 type Msg struct {
 	Type  int    `json:"type"`
 	Code  int    `json:"code"`
-	Error string `json:"error,omitzero"`
 	Key   string `json:"key,omitzero"`
 	Value string `json:"val,omitzero"`
 }
@@ -63,7 +64,13 @@ func (c *Client) SendOffer(offer string) (key, password string, e error) {
 	}
 
 	var answer Msg
-	c.conn.ReadJSON(&answer)
+	if e=c.conn.ReadJSON(&answer);e!=nil{
+		return
+	}
+	if answer.Code==-1 {
+		e= errors.New(answer.Value)
+	}
+	return strings.Split() answer.Key, an
 }
 
 /*
