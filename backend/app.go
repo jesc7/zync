@@ -106,7 +106,9 @@ func (a *App) OnStartup(ctx context.Context) {
 	_ = e
 
 	go func() {
-		Conn, a.MyData.Offer.val, a.MyData.Offer.e = rtc.CreateOffer(a.cfg.Stuns)
+		if Conn, a.MyData.Offer.val, a.MyData.Offer.e = rtc.CreateOffer(a.cfg.Stuns); a.MyData.Offer.e != nil {
+
+		}
 	}()
 }
 
