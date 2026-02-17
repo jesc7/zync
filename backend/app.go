@@ -93,6 +93,7 @@ func (a *App) OnStartup(ctx context.Context) {
 
 	func() {
 		pwd, _ := os.Getwd()
+		log.Println(pwd)
 		if util.IsFileExists(filepath.Join(pwd, "cfg.json")) {
 			f, e := os.ReadFile(filepath.Join(pwd, "cfg.json"))
 			if e != nil {
@@ -108,6 +109,7 @@ func (a *App) OnStartup(ctx context.Context) {
 
 	a.sig, e = signal.NewClient(a.cfg.Signal.Addr)
 	_ = e
+	log.Printf("%#v", a.cfg)
 
 	go func() (e error) {
 		defer func() {
