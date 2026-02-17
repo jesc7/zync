@@ -123,9 +123,8 @@ func (a *App) OnStartup(ctx context.Context) {
 		if e != nil {
 			return
 		}
-		if a.MyData.Offer.Key, a.MyData.Offer.Password, e = a.sig.SendOffer(offer); e != nil {
-			return
-		}
+		a.MyData.Offer.Key, a.MyData.Offer.Password, e = a.sig.SendOffer(offer)
+		return
 	}()
 }
 

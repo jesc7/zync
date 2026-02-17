@@ -4,13 +4,13 @@
 
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
-import { EventsOn, EventsOff } from '@wailsjs/runtime/runtime'
+//import { EventsOn, EventsOff } from '@wailsjs/runtime/runtime'
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
 const time = ref()
 
-onMounted(() => {
+/*onMounted(() => {
   // Подписываемся на событие "changeTime"
   EventsOn('changeTime', () => {
     time.value = runtime
@@ -22,6 +22,6 @@ onMounted(() => {
       timeout: 500
     })
   })
-})
+})*/
 
 </script>
