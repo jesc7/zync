@@ -78,15 +78,23 @@ func NewApp() *App {
 func (a *App) OnStartup(ctx context.Context) {
 	a.ctx = ctx
 
-	if util.IsFileExists(filepath.Join(filepath.Dir(os.Args[0]), "cfg.json")) {
-		f, e := os.ReadFile(filepath.Join(filepath.Dir(os.Args[0]), "cfg.json"))
-		if e != nil {
-			return e
-		}
-		if e = json.Unmarshal(f, &cfg); e != nil {
-			return e
-		}
+	a.cfg = Config{
+		Stun: []string{
+			"stun:stun.l.google.com:19302",
+		},
 	}
+
+	func() {
+		if util.IsFileExists(filepath.Join(filepath.Dir(os.Args[0]), "cfg.json")) {
+			f, e := os.ReadFile(filepath.Join(filepath.Dir(os.Args[0]), "cfg.json"))
+			if e != nil {
+				return
+			}
+			if e = json.Unmarshal(f, &a.cfg); e != nil {
+				return
+			}
+		}
+	}()
 
 	go func() {
 		Conn, MyData.Offer.val, MyData.Offer.e = rtc.CreateOffer()
