@@ -19,8 +19,8 @@ import (
 //go:embed all:frontend/dist/spa
 var assets embed.FS
 
-//go:embed build/appicon.png
-var icon []byte
+////go:embed build/appicon.png
+//var icon []byte
 
 func main() {
 	flog, e := os.OpenFile(strings.TrimSuffix(os.Args[0], filepath.Ext(os.Args[0]))+".log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
