@@ -1,6 +1,7 @@
 package signal
 
 import (
+	"context"
 	"errors"
 	"net/url"
 	"strings"
@@ -36,7 +37,7 @@ type Client struct {
 	mu      sync.RWMutex
 }
 
-func NewClient(addr string) (c *Client, e error) {
+func NewClient(ctx context.Context, addr string) (c *Client, e error) {
 	c = &Client{
 		in:  make(chan Msg),
 		out: make(chan Msg),
@@ -47,12 +48,19 @@ func NewClient(addr string) (c *Client, e error) {
 		return nil, e
 	}
 
-	go func() {
-		defer c.conn.Close()
+	ctx, cancel := context.WithCancel(ctx)
 
-		for m := range c.out {
-			if e = c.conn.WriteJSON(m); e != nil {
+	go func() {
+		defer cancel()
+
+		for {
+			select {
+			case <-ctx.Done():
 				return
+			case m := <-c.out:
+				if e = c.conn.WriteJSON(m); e != nil {
+					return
+				}
 			}
 		}
 	}()
@@ -95,15 +103,13 @@ func (c *Client) read(timeout time.Duration) (m Msg, e error) {
 }
 
 func (c *Client) SendOffer(offer string) (key, password string, e error) {
-	if e = c.conn.WriteJSON(Msg{
+	c.out <- Msg{
 		Type:  MT_SENDOFFER,
 		Value: offer,
-	}); e != nil {
-		return
 	}
 
-	var answer Msg
-	if e = c.conn.ReadJSON(&answer); e != nil {
+	answer, e := c.read(10 * time.Second)
+	if e != nil {
 		return
 	}
 	if answer.Type != MT_SENDOFFER {
