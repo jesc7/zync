@@ -3,6 +3,9 @@ package main
 import (
 	"embed"
 	"log"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"
@@ -20,6 +23,13 @@ var assets embed.FS
 var icon []byte
 
 func main() {
+	flog, e := os.OpenFile(strings.TrimSuffix(os.Args[0], filepath.Ext(os.Args[0]))+".log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	if e != nil {
+		log.Fatalln(e)
+	}
+	defer flog.Close()
+	log.SetOutput(flog)
+
 	// Create an instance of the app structure
 	app := backend.NewApp()
 

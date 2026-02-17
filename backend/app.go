@@ -3,6 +3,7 @@ package backend
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -94,9 +95,11 @@ func (a *App) OnStartup(ctx context.Context) {
 		if util.IsFileExists(filepath.Join(filepath.Dir(os.Args[0]), "cfg.json")) {
 			f, e := os.ReadFile(filepath.Join(filepath.Dir(os.Args[0]), "cfg.json"))
 			if e != nil {
+				log.Println(e)
 				return
 			}
 			if e = json.Unmarshal(f, &a.cfg); e != nil {
+				log.Println(e)
 				return
 			}
 		}
@@ -105,9 +108,23 @@ func (a *App) OnStartup(ctx context.Context) {
 	a.sig, e = signal.NewClient(a.cfg.Signal.Addr)
 	_ = e
 
-	go func() {
-		if Conn, a.MyData.Offer.val, a.MyData.Offer.e = rtc.CreateOffer(a.cfg.Stuns); a.MyData.Offer.e != nil {
+	go func() (e error) {
+		defer func() {
+			if e != nil {
+				a.MyData.Offer.e = e
+				log.Println(e)
+			}
+		}()
 
+		if Conn, a.MyData.Offer.val, a.MyData.Offer.e = rtc.CreateOffer(a.cfg.Stuns); e != nil {
+			return
+		}
+		offer, e := rtc.Encode(a.MyData.Offer.val)
+		if e != nil {
+			return
+		}
+		if a.MyData.Offer.Key, a.MyData.Offer.Password, e = a.sig.SendOffer(offer); e != nil {
+			return
 		}
 	}()
 }
