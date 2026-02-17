@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	rtc "github.com/jesc7/zync/backend/rtc"
+	"github.com/jesc7/zync/backend/util"
 	"github.com/pion/webrtc/v4"
 )
 
