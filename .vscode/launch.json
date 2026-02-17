@@ -16,8 +16,8 @@
             "type": "go",
             "request": "launch",
             "mode": "exec",
-            "program": "main.go",
-            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/build/bin/zync.exe",
+            "preLaunchTask": "wails-build-debug",
             "cwd": "${workspaceFolder}"
         }       
 
