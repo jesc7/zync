@@ -63,7 +63,7 @@ var (
 )
 
 type Config struct {
-	Stun []string `json:"stun"`
+	Stuns []string `json:"stuns"`
 }
 
 type App struct {
@@ -79,7 +79,7 @@ func (a *App) OnStartup(ctx context.Context) {
 	a.ctx = ctx
 
 	a.cfg = Config{
-		Stun: []string{
+		Stuns: []string{
 			"stun:stun.l.google.com:19302",
 		},
 	}
@@ -97,7 +97,7 @@ func (a *App) OnStartup(ctx context.Context) {
 	}()
 
 	go func() {
-		Conn, MyData.Offer.val, MyData.Offer.e = rtc.CreateOffer()
+		Conn, MyData.Offer.val, MyData.Offer.e = rtc.CreateOffer(a.cfg.Stuns)
 	}()
 }
 

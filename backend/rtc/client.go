@@ -3,13 +3,7 @@ package rtc
 import (
 	"encoding/base64"
 	"encoding/json"
-	"errors"
-	"fmt"
-	"log"
-	"net/url"
-	"strings"
 
-	"github.com/gorilla/websocket"
 	"github.com/pion/mediadevices"
 	"github.com/pion/mediadevices/pkg/codec/openh264"
 	"github.com/pion/webrtc/v4"
@@ -31,18 +25,10 @@ func decode(in string, v any) error {
 	return json.Unmarshal(b, v)
 }
 
-type Msg struct {
-	Type  int    `json:"type"`
-	Code  int    `json:"code"`
-	Error string `json:"error,omitzero"`
-	Key   string `json:"key,omitzero"`
-	Value string `json:"val,omitzero"`
-}
-
-func CreateOffer() (pc *webrtc.PeerConnection, offer webrtc.SessionDescription, e error) {
+func CreateOffer(servers []string) (pc *webrtc.PeerConnection, offer webrtc.SessionDescription, e error) {
 	config := webrtc.Configuration{
 		ICEServers: []webrtc.ICEServer{
-			{URLs: []string{"stun:stun.l.google.com:19302"}},
+			{URLs: servers},
 		},
 	}
 
@@ -92,7 +78,7 @@ func CreateOffer() (pc *webrtc.PeerConnection, offer webrtc.SessionDescription, 
 	return
 }
 
-func abc() {
+/*func abc() {
 	//signaling server websocket conn
 	u := url.URL{Scheme: "ws", Host: "localhost:1212", Path: "/ws"}
 	conn, _, e := websocket.DefaultDialer.Dial(u.String(), nil)
@@ -148,3 +134,4 @@ func abc() {
 		}
 	}
 }
+*/
