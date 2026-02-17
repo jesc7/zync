@@ -1,3 +1,8 @@
 2026/02/17 18:59:41 [WebView2] Environment created successfully
 2026/02/17 18:59:41 D:\proj\go\src\github.com\jesc7\zync
 2026/02/17 18:59:41 backend.Config{Signal:struct { Addr string "json:\"addr\"" }{Addr:"localhost:1212"}, Stuns:[]string{"stun:stun.l.google.com:19302"}}
+2026/02/17 21:24:16 [WebView2] Environment created successfully
+2026/02/17 21:24:16 D:\proj\go\src\github.com\jesc7\zync
+2026/02/17 21:24:16 backend.Config{Signal:struct { Addr string "json:\"addr\"" }{Addr:"localhost:1212"}, Stuns:[]string{"stun:stun.l.google.com:19302"}}
+2026/02/17 21:24:16 eyJ0eXBlIjoidW5rbm93biIsInNkcCI6IiJ9
+2026/02/17 21:24:16 99348040 6394 <nil>

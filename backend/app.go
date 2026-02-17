@@ -126,7 +126,10 @@ func (a *App) OnStartup(ctx context.Context) {
 		if e != nil {
 			return
 		}
+		log.Println(offer)
+
 		a.MyData.Offer.Key, a.MyData.Offer.Password, e = a.sig.SendOffer(offer)
+		log.Println(a.MyData.Offer.Key, a.MyData.Offer.Password, e)
 		return
 	}()
 }
