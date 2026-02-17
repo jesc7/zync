@@ -94,6 +94,8 @@ func (c *Client) Close() {
 
 func (c *Client) read(timeout time.Duration) (m Msg, e error) {
 	select {
+	case <-c.ctx.Done():
+		return Msg{}, c.ctx.Err()
 	case <-time.After(timeout):
 		return Msg{}, errors.New("Read timeout")
 	case m = <-c.in:
@@ -102,6 +104,10 @@ func (c *Client) read(timeout time.Duration) (m Msg, e error) {
 }
 
 func (c *Client) SendOffer(offer string) (key, password string, e error) {
+	if c.ctx.Err() != nil {
+		return "", "", c.ctx.Err()
+	}
+
 	c.out <- Msg{
 		Type:  MT_SENDOFFER,
 		Value: offer,
