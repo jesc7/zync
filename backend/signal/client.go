@@ -2,6 +2,7 @@ package signal
 
 import (
 	"errors"
+	"log"
 	"net/url"
 	"strings"
 	"sync"
@@ -45,6 +46,18 @@ func NewClient(addr string) (c *Client, e error) {
 	if e != nil {
 		return nil, e
 	}
+
+	go func() {
+		defer close(done)
+		for {
+			_, message, err := c.ReadMessage()
+			if err != nil {
+				log.Println("read:", err)
+				return
+			}
+			log.Printf("recv: %s", message)
+		}
+	}()
 	return
 }
 
