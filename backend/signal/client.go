@@ -35,6 +35,7 @@ type Client struct {
 	conn    *websocket.Conn
 	in, out chan Msg
 	mu      sync.RWMutex
+	ctx     context.Context
 }
 
 func NewClient(ctx context.Context, addr string) (c *Client, e error) {
@@ -48,11 +49,10 @@ func NewClient(ctx context.Context, addr string) (c *Client, e error) {
 		return nil, e
 	}
 
-	ctx, cancel := context.WithCancel(ctx)
-
+	var cancel context.CancelFunc
+	c.ctx, cancel = context.WithCancel(ctx)
 	go func() {
 		defer cancel()
-
 		for {
 			select {
 			case <-ctx.Done():
@@ -66,11 +66,10 @@ func NewClient(ctx context.Context, addr string) (c *Client, e error) {
 	}()
 
 	go func() {
-		defer c.conn.Close()
-
+		defer cancel()
 		var m Msg
 		for {
-			if e = c.conn.ReadJSON(&m); e != nil {
+			if e = c.conn.ReadJSON(&m); e != nil || ctx.Err() != nil {
 				return
 			}
 			switch m.Type {
