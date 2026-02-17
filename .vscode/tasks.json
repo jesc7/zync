@@ -10,14 +10,6 @@
           "CGO_ENABLED": "1"
         }
       },
-      "osx": {
-        "options": {
-          "env": {
-            "CGO_CFLAGS": "-mmacosx-version-min=10.13",
-            "CGO_LDFLAGS": "-framework UniformTypeIdentifiers -mmacosx-version-min=10.13"
-          }
-        }
-      },
       "windows": {
         "options": {
           "env": {
@@ -45,14 +37,6 @@
           "CGO_ENABLED": "1"
         }
       },
-      "osx": {
-        "options": {
-          "env": {
-            "CGO_CFLAGS": "-mmacosx-version-min=10.13",
-            "CGO_LDFLAGS": "-framework UniformTypeIdentifiers -mmacosx-version-min=10.13"
-          }
-        }
-      },
       "windows": {
         "options": {
           "env": {
@@ -78,14 +62,6 @@
         "cwd": "${workspaceFolder}",
         "env": {
           "CGO_ENABLED": "1"
-        }
-      },
-      "osx": {
-        "options": {
-          "env": {
-            "CGO_CFLAGS": "-mmacosx-version-min=10.13",
-            "CGO_LDFLAGS": "-framework UniformTypeIdentifiers -mmacosx-version-min=10.13"
-          }
         }
       },
       "windows": {
