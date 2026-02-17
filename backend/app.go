@@ -61,16 +61,19 @@ func (o *Data) Set(part DataPart) {
 var (
 	MyData Data
 	Conn   *webrtc.PeerConnection
-	Signal *signal.Client
 )
 
 type Config struct {
+	Signal struct {
+		Addr string `json:"addr"`
+	} `json:"signal"`
 	Stuns []string `json:"stuns"`
 }
 
 type App struct {
 	ctx context.Context
 	cfg Config
+	sig *signal.Client
 }
 
 func NewApp() *App {
@@ -78,8 +81,9 @@ func NewApp() *App {
 }
 
 func (a *App) OnStartup(ctx context.Context) {
-	a.ctx = ctx
+	var e error
 
+	a.ctx = ctx
 	a.cfg = Config{
 		Stuns: []string{
 			"stun:stun.l.google.com:19302",
@@ -97,6 +101,9 @@ func (a *App) OnStartup(ctx context.Context) {
 			}
 		}
 	}()
+
+	a.sig, e = signal.NewClient(a.cfg.Signal.Addr)
+	_ = e
 
 	go func() {
 		Conn, MyData.Offer.val, MyData.Offer.e = rtc.CreateOffer(a.cfg.Stuns)
