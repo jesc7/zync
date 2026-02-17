@@ -78,8 +78,8 @@ func NewApp() *App {
 func (a *App) OnStartup(ctx context.Context) {
 	a.ctx = ctx
 
-	if util.IsFileExists(filepath.Join(filepath.Dir(bin), "cfg.json")) {
-		f, e := os.ReadFile(filepath.Join(filepath.Dir(bin), "cfg.json"))
+	if util.IsFileExists(filepath.Join(filepath.Dir(os.Args[0]), "cfg.json")) {
+		f, e := os.ReadFile(filepath.Join(filepath.Dir(os.Args[0]), "cfg.json"))
 		if e != nil {
 			return e
 		}
