@@ -59,8 +59,7 @@ func (o *Data) Set(part DataPart) {
 }
 
 var (
-	MyData Data
-	Conn   *webrtc.PeerConnection
+	Conn *webrtc.PeerConnection
 )
 
 type Config struct {
@@ -71,9 +70,10 @@ type Config struct {
 }
 
 type App struct {
-	ctx context.Context
-	cfg Config
-	sig *signal.Client
+	ctx    context.Context
+	cfg    Config
+	sig    *signal.Client
+	MyData Data
 }
 
 func NewApp() *App {
@@ -106,7 +106,7 @@ func (a *App) OnStartup(ctx context.Context) {
 	_ = e
 
 	go func() {
-		Conn, MyData.Offer.val, MyData.Offer.e = rtc.CreateOffer(a.cfg.Stuns)
+		Conn, a.MyData.Offer.val, a.MyData.Offer.e = rtc.CreateOffer(a.cfg.Stuns)
 	}()
 }
 

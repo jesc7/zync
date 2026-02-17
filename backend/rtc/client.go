@@ -9,7 +9,7 @@ import (
 	"github.com/pion/webrtc/v4"
 )
 
-func encode(v any) (string, error) {
+func Encode(v any) (string, error) {
 	b, e := json.Marshal(v)
 	if e != nil {
 		return "", e
@@ -17,7 +17,7 @@ func encode(v any) (string, error) {
 	return base64.StdEncoding.EncodeToString(b), nil
 }
 
-func decode(in string, v any) error {
+func Decode(in string, v any) error {
 	b, e := base64.StdEncoding.DecodeString(in)
 	if e != nil {
 		return e
