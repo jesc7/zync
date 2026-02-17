@@ -1,6 +1,10 @@
 package signal
 
-import "net/url"
+import (
+	"net/url"
+
+	"github.com/gorilla/websocket"
+)
 
 type Msg struct {
 	Type  int    `json:"type"`
@@ -20,13 +24,19 @@ func start(addr string, in <-chan Msg) chan<- Msg {
 }
 
 type Client struct {
+	conn    *websocket.Conn
 	in, out chan Msg
 }
 
-func NewClient(addr string) (*Client, error) {
-	u := url.URL{Scheme: "ws", Host: *addr, Path: "/echo"}
+func NewClient(addr string) (c *Client, e error) {
+	c = &Client{}
+	u := url.URL{Scheme: "ws", Host: addr, Path: "/ws"}
+	c.conn, _, e = websocket.DefaultDialer.Dial(u.String(), nil)
+	if e != nil {
+		return nil, e
+	}
 
-	return &Client{}
+	return
 }
 
 func SendOffer() {
