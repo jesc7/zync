@@ -2,7 +2,6 @@ package signal
 
 import (
 	"errors"
-	"log"
 	"net/url"
 	"strings"
 	"sync"
@@ -48,14 +47,29 @@ func NewClient(addr string) (c *Client, e error) {
 	}
 
 	go func() {
-		defer close(done)
-		for {
-			_, message, err := c.ReadMessage()
-			if err != nil {
-				log.Println("read:", err)
+		for m := range c.out {
+			if e = c.conn.WriteJSON(Msg{
+				Type:  MT_SENDOFFER,
+				Value: offer,
+			}); e != nil {
 				return
 			}
-			log.Printf("recv: %s", message)
+
+		}
+	}()
+
+	go func() {
+		var m Msg
+		for {
+			if e = c.conn.ReadJSON(&m); e != nil {
+				return
+			}
+			switch m.Type {
+			case MT_PING:
+				c.out <- Msg{Type: MT_PONG}
+			default:
+				c.in <- m
+			}
 		}
 	}()
 	return
