@@ -92,8 +92,9 @@ func (a *App) OnStartup(ctx context.Context) {
 	}
 
 	func() {
-		if util.IsFileExists(filepath.Join(filepath.Dir(os.Args[0]), "cfg.json")) {
-			f, e := os.ReadFile(filepath.Join(filepath.Dir(os.Args[0]), "cfg.json"))
+		pwd, _ := os.Getwd()
+		if util.IsFileExists(filepath.Join(pwd, "cfg.json")) {
+			f, e := os.ReadFile(filepath.Join(pwd, "cfg.json"))
 			if e != nil {
 				log.Println(e)
 				return
