@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -47,18 +48,18 @@ func NewClient(addr string) (c *Client, e error) {
 	}
 
 	go func() {
+		defer c.conn.Close()
+
 		for m := range c.out {
-			if e = c.conn.WriteJSON(Msg{
-				Type:  MT_SENDOFFER,
-				Value: offer,
-			}); e != nil {
+			if e = c.conn.WriteJSON(m); e != nil {
 				return
 			}
-
 		}
 	}()
 
 	go func() {
+		defer c.conn.Close()
+
 		var m Msg
 		for {
 			if e = c.conn.ReadJSON(&m); e != nil {
@@ -82,6 +83,15 @@ func (c *Client) Close() {
 	close(c.in)
 	close(c.out)
 	c.conn.Close()
+}
+
+func (c *Client) read(timeout time.Duration) (m Msg, e error) {
+	select {
+	case <-time.After(timeout):
+		return Msg{}, errors.New("Read timeout")
+	case m = <-c.in:
+		return
+	}
 }
 
 func (c *Client) SendOffer(offer string) (key, password string, e error) {
