@@ -2,6 +2,9 @@ package backend
 
 import (
 	"context"
+	"encoding/json"
+	"os"
+	"path/filepath"
 
 	rtc "github.com/jesc7/zync/backend/rtc"
 	"github.com/pion/webrtc/v4"
@@ -58,18 +61,31 @@ var (
 	Conn   *webrtc.PeerConnection
 )
 
+type Config struct {
+	Stun []string `json:"stun"`
+}
+
 type App struct {
 	ctx context.Context
+	cfg Config
 }
 
 func NewApp() *App {
 	return &App{}
 }
 
-// -------------- defaults -----------------
-
 func (a *App) OnStartup(ctx context.Context) {
 	a.ctx = ctx
+
+	if util.IsFileExists(filepath.Join(filepath.Dir(bin), "cfg.json")) {
+		f, e := os.ReadFile(filepath.Join(filepath.Dir(bin), "cfg.json"))
+		if e != nil {
+			return e
+		}
+		if e = json.Unmarshal(f, &cfg); e != nil {
+			return e
+		}
+	}
 
 	go func() {
 		Conn, MyData.Offer.val, MyData.Offer.e = rtc.CreateOffer()
