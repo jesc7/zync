@@ -90,13 +90,6 @@ type App struct {
 	conn          *webrtc.PeerConnection
 	MyData        Data
 	currentStatus Status
-
-	/*onSignalOk    Event
-	onSignalError Event
-	onOfferOk     Event
-	onOfferError  Event
-	onAnswerOk    Event
-	onAnswerError Event*/
 }
 
 func NewApp() *App {
@@ -161,9 +154,10 @@ func (a *App) OnStartup(ctx context.Context) {
 		}
 	}()
 
-	a.sig, e = signal.NewClient(a.ctx, a.cfg.Signal.Addr)
-	_ = e
-	log.Printf("%#v", a.cfg)
+	if a.sig, e = signal.NewClient(a.ctx, a.cfg.Signal.Addr); e != nil {
+		a.onSignalError()
+		log.Println(e)
+	}
 
 	go func() (e error) {
 		defer func() {
