@@ -106,8 +106,9 @@ func (a *App) onSignalOk() {
 	a.statusSignal = SIGNAL_OK
 }
 
-func (a *App) onSignalError() {
+func (a *App) onSignalError(e error) {
 	a.statusSignal = SIGNAL_ERROR
+	log.Println(e)
 }
 
 func (a *App) onOfferOk() {
@@ -116,14 +117,15 @@ func (a *App) onOfferOk() {
 	if a.statusSignal == SIGNAL_OK {
 		offer, _ := rtc.Encode(a.MyData.Offer.val)
 		if a.MyData.Offer.Key, a.MyData.Offer.Password, a.MyData.Offer.e = a.sig.SendOffer(offer); a.MyData.Offer.e != nil {
-			a.onOfferError()
+			a.onOfferError(a.MyData.Offer.e)
 		}
 		log.Println(a.MyData.Offer.Key, a.MyData.Offer.Password)
 	}
 }
 
-func (a *App) onOfferError() {
+func (a *App) onOfferError(e error) {
 	a.statusOffer = OFFER_ERROR
+	log.Println(e)
 }
 
 func (a *App) onOfferConnected() {
@@ -134,8 +136,9 @@ func (a *App) onAnswerOk() {
 	a.statusAnswer = ANSWER_OK
 }
 
-func (a *App) onAnswerError() {
+func (a *App) onAnswerError(e error) {
 	a.statusAnswer = ANSWER_ERROR
+	log.Println(e)
 }
 
 func (a *App) onAnswerConnected() {
@@ -169,24 +172,15 @@ func (a *App) OnStartup(ctx context.Context) {
 	}()
 
 	if a.sig, e = signal.NewClient(a.ctx, a.cfg.Signal.Addr); e != nil {
-		a.onSignalError()
-		log.Println(e)
+		a.onSignalError(e)
 	}
 
-	go func() (e error) {
-		defer func() {
-			if e != nil {
-				a.MyData.Offer.e = e
-				log.Println(e)
-			}
-		}()
-
-		if a.conn, a.MyData.Offer.val, e = rtc.CreateOffer(a.cfg.Stuns); e != nil {
-			a.onOfferError()
+	go func() {
+		if a.conn, a.MyData.Offer.val, a.MyData.Offer.e = rtc.CreateOffer(a.cfg.Stuns); a.MyData.Offer.e != nil {
+			a.onOfferError(a.MyData.Offer.e)
 			return
 		}
 		a.onOfferOk()
-		return
 	}()
 }
 
