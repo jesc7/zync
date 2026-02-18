@@ -66,30 +66,36 @@ type Config struct {
 	Stuns []string `json:"stuns"`
 }
 
-type Status int
+type SignalStatus int
+type OfferStatus int
+type AnswerStatus int
 
 const (
-	STATUS_SIGNAL_ERROR Status = iota - 1
-	STATUS_SIGNAL_OK
-
-	STATUS_OFFER_ERROR
-	STATUS_OFFER_OK
-	STATUS_OFFER_CONNECTED
-
-	STATUS_ANSWER_ERROR
-	STATUS_ANSWER_OK
-	STATUS_ANSWER_CONNECTED
+	SIGNAL_ERROR SignalStatus = iota - 1
+	SIGNAL_OK
 )
 
-type Event func(self *App, args ...any)
+const (
+	OFFER_ERROR OfferStatus = iota - 1
+	OFFER_OK
+	OFFER_CONNECTED
+)
+
+const (
+	ANSWER_ERROR AnswerStatus = iota - 1
+	ANSWER_OK
+	ANSWER_CONNECTED
+)
 
 type App struct {
-	ctx           context.Context
-	cfg           Config
-	sig           *signal.Client
-	conn          *webrtc.PeerConnection
-	MyData        Data
-	currentStatus Status
+	ctx          context.Context
+	cfg          Config
+	sig          *signal.Client
+	conn         *webrtc.PeerConnection
+	MyData       Data
+	statusSignal SignalStatus
+	statusOffer  OfferStatus
+	statusAnswer AnswerStatus
 }
 
 func NewApp() *App {
@@ -97,35 +103,35 @@ func NewApp() *App {
 }
 
 func (a *App) onSignalOk() {
-	a.currentStatus = STATUS_SIGNAL_OK
+	a.statusSignal = SIGNAL_OK
 }
 
 func (a *App) onSignalError() {
-	a.currentStatus = STATUS_SIGNAL_ERROR
+	a.statusSignal = SIGNAL_ERROR
 }
 
 func (a *App) onOfferOk() {
-	a.currentStatus = STATUS_OFFER_OK
+	a.statusOffer = OFFER_OK
 }
 
 func (a *App) onOfferError() {
-	a.currentStatus = STATUS_OFFER_ERROR
+	a.statusOffer = OFFER_ERROR
 }
 
 func (a *App) onOfferConnected() {
-	a.currentStatus = STATUS_OFFER_CONNECTED
+	a.statusOffer = OFFER_CONNECTED
 }
 
 func (a *App) onAnswerOk() {
-	a.currentStatus = STATUS_ANSWER_OK
+	a.statusAnswer = ANSWER_OK
 }
 
 func (a *App) onAnswerError() {
-	a.currentStatus = STATUS_ANSWER_ERROR
+	a.statusAnswer = ANSWER_ERROR
 }
 
 func (a *App) onAnswerConnected() {
-	a.currentStatus = STATUS_ANSWER_CONNECTED
+	a.statusAnswer = ANSWER_CONNECTED
 }
 
 func (a *App) OnStartup(ctx context.Context) {
