@@ -107,7 +107,7 @@ func (a *App) OnStartup(ctx context.Context) {
 		}
 	}()
 
-	a.sig, e = signal.NewClient(a.cfg.Signal.Addr)
+	a.sig, e = signal.NewClient(a.ctx, a.cfg.Signal.Addr)
 	_ = e
 	log.Printf("%#v", a.cfg)
 
