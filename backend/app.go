@@ -174,6 +174,7 @@ func (a *App) OnStartup(ctx context.Context) {
 		}()
 
 		if a.conn, a.MyData.Offer.val, e = rtc.CreateOffer(a.cfg.Stuns); e != nil {
+			a.onOfferError()
 			return
 		}
 		offer, e := rtc.Encode(a.MyData.Offer.val)
