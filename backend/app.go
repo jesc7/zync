@@ -70,13 +70,14 @@ type Status int
 
 const (
 	STATUS_SIGNAL_ERROR Status = iota - 1
-	STATUS_NONE
-	STATUS_OFFER_OK
+	STATUS_SIGNAL_OK
+
 	STATUS_OFFER_ERROR
+	STATUS_OFFER_OK
 	STATUS_OFFER_CONNECTED
 
-	STATUS_ANSWER_OK
 	STATUS_ANSWER_ERROR
+	STATUS_ANSWER_OK
 	STATUS_ANSWER_CONNECTED
 )
 
@@ -90,16 +91,48 @@ type App struct {
 	MyData        Data
 	currentStatus Status
 
-	onSignalOk    Event
+	/*onSignalOk    Event
 	onSignalError Event
 	onOfferOk     Event
 	onOfferError  Event
 	onAnswerOk    Event
-	onAnswerError Event
+	onAnswerError Event*/
 }
 
 func NewApp() *App {
 	return &App{}
+}
+
+func (a *App) onSignalOk() {
+	a.currentStatus = STATUS_SIGNAL_OK
+}
+
+func (a *App) onSignalError() {
+	a.currentStatus = STATUS_SIGNAL_ERROR
+}
+
+func (a *App) onOfferOk() {
+	a.currentStatus = STATUS_OFFER_OK
+}
+
+func (a *App) onOfferError() {
+	a.currentStatus = STATUS_OFFER_ERROR
+}
+
+func (a *App) onOfferConnected() {
+	a.currentStatus = STATUS_OFFER_CONNECTED
+}
+
+func (a *App) onAnswerOk() {
+	a.currentStatus = STATUS_ANSWER_OK
+}
+
+func (a *App) onAnswerError() {
+	a.currentStatus = STATUS_ANSWER_ERROR
+}
+
+func (a *App) onAnswerConnected() {
+	a.currentStatus = STATUS_ANSWER_CONNECTED
 }
 
 func (a *App) OnStartup(ctx context.Context) {
