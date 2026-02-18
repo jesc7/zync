@@ -118,6 +118,7 @@ func (a *App) onOfferOk() {
 		offer, _ := rtc.Encode(a.MyData.Offer.val)
 		if a.MyData.Offer.Key, a.MyData.Offer.Password, a.MyData.Offer.e = a.sig.SendOffer(offer); a.MyData.Offer.e != nil {
 			a.onOfferError(a.MyData.Offer.e)
+			return
 		}
 		log.Println(a.MyData.Offer.Key, a.MyData.Offer.Password)
 	}
