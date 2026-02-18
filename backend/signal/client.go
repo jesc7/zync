@@ -94,6 +94,7 @@ func (c *Client) Close() {
 
 	close(c.in)
 	close(c.out)
+	close(c.ans)
 	c.conn.Close()
 }
 
