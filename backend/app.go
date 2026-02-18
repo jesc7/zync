@@ -112,6 +112,12 @@ func (a *App) onSignalError() {
 
 func (a *App) onOfferOk() {
 	a.statusOffer = OFFER_OK
+
+	offer, _ := rtc.Encode(a.MyData.Offer.val)
+	if a.MyData.Offer.Key, a.MyData.Offer.Password, a.MyData.Offer.e = a.sig.SendOffer(offer); a.MyData.Offer.e != nil {
+		a.onOfferError()
+	}
+	log.Println(a.MyData.Offer.Key, a.MyData.Offer.Password)
 }
 
 func (a *App) onOfferError() {
@@ -177,14 +183,7 @@ func (a *App) OnStartup(ctx context.Context) {
 			a.onOfferError()
 			return
 		}
-		offer, e := rtc.Encode(a.MyData.Offer.val)
-		if e != nil {
-			return
-		}
-		log.Println(offer)
-
-		a.MyData.Offer.Key, a.MyData.Offer.Password, e = a.sig.SendOffer(offer)
-		log.Println(a.MyData.Offer.Key, a.MyData.Offer.Password, e)
+		a.onOfferOk()
 		return
 	}()
 }
