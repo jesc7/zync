@@ -32,16 +32,17 @@ type Msg struct {
 }
 
 type Client struct {
-	conn    *websocket.Conn
-	in, out chan Msg
-	mu      sync.RWMutex
-	ctx     context.Context
+	conn         *websocket.Conn
+	in, out, ans chan Msg
+	mu           sync.RWMutex
+	ctx          context.Context
 }
 
 func NewClient(ctx context.Context, addr string) (c *Client, e error) {
 	c = &Client{
 		in:  make(chan Msg),
 		out: make(chan Msg),
+		ans: make(chan Msg),
 	}
 	u := url.URL{Scheme: "ws", Host: addr, Path: "/ws"}
 	c.conn, _, e = websocket.DefaultDialer.Dial(u.String(), nil)
@@ -53,6 +54,7 @@ func NewClient(ctx context.Context, addr string) (c *Client, e error) {
 	c.ctx, cancel = context.WithCancel(ctx)
 	go func() {
 		defer cancel()
+
 		for {
 			select {
 			case <-ctx.Done():
@@ -67,6 +69,7 @@ func NewClient(ctx context.Context, addr string) (c *Client, e error) {
 
 	go func() {
 		defer cancel()
+
 		var m Msg
 		for {
 			if e = c.conn.ReadJSON(&m); e != nil || ctx.Err() != nil {
@@ -75,6 +78,8 @@ func NewClient(ctx context.Context, addr string) (c *Client, e error) {
 			switch m.Type {
 			case MT_PING:
 				c.out <- Msg{Type: MT_PONG}
+			case MT_RECEIVEANSWER: //к клиенту кто-то хочет подключиться
+				c.ans <- Msg{Type: MT_PONG}
 			default:
 				c.in <- m
 			}
