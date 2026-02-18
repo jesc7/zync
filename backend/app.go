@@ -9,7 +9,6 @@ import (
 
 	rtc "github.com/jesc7/zync/backend/rtc"
 	signal "github.com/jesc7/zync/backend/signal"
-	"github.com/jesc7/zync/backend/util"
 	"github.com/pion/webrtc/v4"
 )
 
@@ -156,21 +155,14 @@ func (a *App) OnStartup(ctx context.Context) {
 		},
 	}
 
-	func() {
-		pwd, _ := os.Getwd()
-		log.Println(pwd)
-		if util.IsFileExists(filepath.Join(pwd, "cfg.json")) {
-			f, e := os.ReadFile(filepath.Join(pwd, "cfg.json"))
-			if e != nil {
-				log.Println(e)
-				return
-			}
-			if e = json.Unmarshal(f, &a.cfg); e != nil {
-				log.Println(e)
-				return
-			}
-		}
-	}()
+	pwd, _ := os.Getwd()
+	f, e := os.ReadFile(filepath.Join(pwd, "cfg.json"))
+	if e == nil {
+		e = json.Unmarshal(f, &a.cfg)
+	}
+	if e != nil {
+		log.Println(e)
+	}
 
 	if a.sig, e = signal.NewClient(a.ctx, a.cfg.Signal.Addr); e != nil {
 		a.onSignalError(e)
