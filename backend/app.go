@@ -13,6 +13,8 @@ import (
 	"github.com/pion/webrtc/v4"
 )
 
+type Event func(args ...any)
+
 type DataPart struct {
 	val      webrtc.SessionDescription
 	Key      string `json:"key"`
@@ -23,6 +25,8 @@ type DataPart struct {
 type Data struct {
 	Offer  DataPart `json:"offer"`
 	Answer DataPart `json:"answer"`
+
+	onOfferError Event
 }
 
 func (o *Data) IsOfferReady() bool {
@@ -59,10 +63,6 @@ func (o *Data) Set(part DataPart) {
 	o.Answer.Password = part.Password
 }
 
-var (
-	Conn *webrtc.PeerConnection
-)
-
 type Config struct {
 	Signal struct {
 		Addr string `json:"addr"`
@@ -74,6 +74,7 @@ type App struct {
 	ctx    context.Context
 	cfg    Config
 	sig    *signal.Client
+	conn   *webrtc.PeerConnection
 	MyData Data
 }
 
@@ -119,7 +120,7 @@ func (a *App) OnStartup(ctx context.Context) {
 			}
 		}()
 
-		if Conn, a.MyData.Offer.val, a.MyData.Offer.e = rtc.CreateOffer(a.cfg.Stuns); e != nil {
+		if a.conn, a.MyData.Offer.val, e = rtc.CreateOffer(a.cfg.Stuns); e != nil {
 			return
 		}
 		offer, e := rtc.Encode(a.MyData.Offer.val)
