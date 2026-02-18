@@ -25,8 +25,6 @@ type DataPart struct {
 type Data struct {
 	Offer  DataPart `json:"offer"`
 	Answer DataPart `json:"answer"`
-
-	onOfferError Event
 }
 
 func (o *Data) IsOfferReady() bool {
@@ -76,6 +74,13 @@ type App struct {
 	sig    *signal.Client
 	conn   *webrtc.PeerConnection
 	MyData Data
+
+	onSignalOk    Event
+	onSignalError Event
+	onOfferOk     Event
+	onOfferError  Event
+	onAnswerOk    Event
+	onAnswerError Event
 }
 
 func NewApp() *App {
