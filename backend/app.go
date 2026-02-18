@@ -13,8 +13,6 @@ import (
 	"github.com/pion/webrtc/v4"
 )
 
-type Event func(args ...any)
-
 type DataPart struct {
 	val      webrtc.SessionDescription
 	Key      string `json:"key"`
@@ -68,12 +66,29 @@ type Config struct {
 	Stuns []string `json:"stuns"`
 }
 
+type Status int
+
+const (
+	STATUS_SIGNAL_ERROR Status = iota - 1
+	STATUS_NONE
+	STATUS_OFFER_OK
+	STATUS_OFFER_ERROR
+	STATUS_OFFER_CONNECTED
+
+	STATUS_ANSWER_OK
+	STATUS_ANSWER_ERROR
+	STATUS_ANSWER_CONNECTED
+)
+
+type Event func(self *App, args ...any)
+
 type App struct {
-	ctx    context.Context
-	cfg    Config
-	sig    *signal.Client
-	conn   *webrtc.PeerConnection
-	MyData Data
+	ctx           context.Context
+	cfg           Config
+	sig           *signal.Client
+	conn          *webrtc.PeerConnection
+	MyData        Data
+	currentStatus Status
 
 	onSignalOk    Event
 	onSignalError Event
