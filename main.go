@@ -51,7 +51,7 @@ func main() {
 		OnShutdown:    app.OnShutdown,
 		Bind: []any{
 			app,
-			//&backend.MyData,
+			&app.MyData,
 		},
 		// Windows platform specific options
 		Windows: &windows.Options{

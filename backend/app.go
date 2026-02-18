@@ -60,7 +60,8 @@ func (o *Data) Set(part DataPart) {
 }
 
 var (
-	Conn *webrtc.PeerConnection
+	D, DD Data
+	Conn  *webrtc.PeerConnection
 )
 
 type Config struct {
